@@ -1,33 +1,17 @@
 const express = require('express');
-const mysql = require('mysql2');
-const ruta = express.Router();
-let resultados;
-
+const contactos = require('./Rutas/Contactos.router');
+const app = express();
+var cors = require('cors');
 
 //Creamos el servidor
-const app = express();
 app.use(express.json());
+app.use(cors());
+app.use(express.urlencoded({extended: true}));
 
-
-//Creamos la conexion a la base de datos
-const connectDB = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'cuatroencasa',
-    database: 'Contactos'
-});
-
+//Arranque del servidor
 app.listen(4000, ()=> {
     console.log('El servidor está corriendo perfectamente');
 });
 
-app.get('/contactos', (req, res) => {
-    connectDB.query(
-        ' SELECT * FROM `Contacto` ',
-        function(err, results, fields)
-        {
-            if(err) console.log(err);
-            else res.send(results);
-        }
-    );
-});
+//Escuchamos Rutas
+app.use('/contactos', contactos);
